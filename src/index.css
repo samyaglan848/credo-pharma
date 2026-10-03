@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
+  }
+  body {
+    overflow-x: hidden;
+    line-height: 1.6;
+    letter-spacing: normal;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cairo', 'Readex Pro', sans-serif;
+    letter-spacing: normal;
+    line-height: 1.35;
+  }
+  p {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+  }
+}
+
+/* ============================================================== */
+/* 🌞 وضع النهار (Light Mode) 🌞 */
+/* ============================================================== */
+body:not(.dark) {
+  background-color: #f1f8fb;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(38, 198, 218, 0.22) 0px, transparent 50%),
+    radial-gradient(at 100% 15%, rgba(255, 110, 64, 0.16) 0px, transparent 45%),
+    radial-gradient(at 50% 45%, rgba(0, 168, 204, 0.14) 0px, transparent 55%),
+    radial-gradient(at 10% 80%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+    radial-gradient(at 90% 95%, rgba(2, 71, 94, 0.14) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: #0b1e28;
+}
+
+body:not(.dark) .text-slate-900 { color: #031b26; }
+body:not(.dark) .text-slate-800 { color: #082838; }
+body:not(.dark) .text-slate-700 { color: #123b4e; }
+body:not(.dark) .text-slate-600 { color: #244b5e; }
+body:not(.dark) .text-slate-500 { color: #43697a; }
+body:not(.dark) .text-slate-400 { color: #638596; }
+
+/* ============================================================== */
+/* 🌙 وضع الليل (Dark Mode) - إشراق تام ووضوح فائق لجميع الخطوط 🌙 */
+/* ============================================================== */
+body.dark {
+  background-color: #01141c;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(0, 168, 204, 0.18) 0px, transparent 50%),
+    radial-gradient(at 100% 20%, rgba(255, 87, 34, 0.14) 0px, transparent 45%),
+    radial-gradient(at 50% 60%, rgba(2, 71, 94, 0.25) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: #f8fafc;
+}
+
+/* وضوح العناوين في وضع الليل */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #ffffff !important;
+}
+
+/* رفع تباين نصوص السليت في وضع الليل لتكون ناصعة ومريحة جداً للقراءة */
+.dark .text-slate-900,
+.dark .text-slate-800 {
+  color: #ffffff !important;
+}
+
+.dark .text-slate-700 {
+  color: #f8fafc !important; /* أبيض ناصع */
+}
+
+.dark .text-slate-600 {
+  color: #e2e8f0 !important; /* Slate 200 مشرق جداً ومريح للعين */
+}
+
+.dark .text-slate-500 {
+  color: #cbd5e1 !important; /* Slate 300 واضح تماماً */
+}
+
+.dark .text-slate-400 {
+  color: #94a3b8 !important; /* Slate 400 واضح للملاحظات والهوامش */
+}
+
+.dark p {
+  color: #e2e8f0 !important; /* جميع الفقرات واضحة بنسبة 100% */
+}
+
+/* ألوان مميزة في وضع الليل */
+.dark .text-primary-900,
+.dark .text-primary-800,
+.dark .text-primary-700 {
+  color: #38bdf8 !important;
+}
+
+.dark .text-cyan-700,
+.dark .text-cyan-800 {
+  color: #22d3ee !important;
+}
+
+/* ============================================================== */
+/* الكروت والزجاجيات */
+/* ============================================================== */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1.5px solid rgba(188, 224, 232, 0.95);
+  box-shadow: 0 12px 35px -5px rgba(2, 71, 94, 0.08), 0 4px 14px -2px rgba(0, 168, 204, 0.06);
+}
+
+.dark .glass-panel {
+  background: rgba(1, 30, 43, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 168, 204, 0.28);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(198, 226, 235, 0.95);
+  box-shadow: 0 8px 24px -4px rgba(2, 71, 94, 0.07), 0 2px 8px -1px rgba(0, 168, 204, 0.04);
+}
+
+.dark .glass-card {
+  background: rgba(1, 28, 39, 0.94);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(2, 71, 94, 0.7);
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================================== */
+/* التدرجات */
+/* ============================================================== */
+.gradient-text-ocean {
+  background: linear-gradient(135deg, #013749 0%, #00607a 40%, #0090b0 75%, #00a8cc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .gradient-text-ocean {
+  background: linear-gradient(135deg, #38bdf8 0%, #00e5ff 60%, #a5f3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-tangerine {
+  background: linear-gradient(135deg, #d84315 0%, #ff5722 55%, #ff7043 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .gradient-text-tangerine {
+  background: linear-gradient(135deg, #ff6e40 0%, #ff7a50 50%, #ffab91 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* تخصيص شريط التمرير */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #eef6f9;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #01141c;
+}
+::-webkit-scrollbar-thumb {
+  background: #3b97b0;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #00a8cc;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5722;
+}

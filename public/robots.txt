@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://credo-pharma.com/sitemap.xml
