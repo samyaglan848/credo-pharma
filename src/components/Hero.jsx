@@ -77,7 +77,8 @@ export default function Hero({ darkMode }) {
           </div>
 
           {/* 8 Core Feature Navigation Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-3.5 max-w-5xl mx-auto mb-14 text-right">
+          {/* 8 Core Feature Navigation Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3.5 max-w-5xl mx-auto mb-12 sm:mb-14 text-right">
             {[
               {
                 id: 'pos',
@@ -90,23 +91,23 @@ export default function Hero({ darkMode }) {
               {
                 id: 'ai',
                 title: 'مساعد واتساب ذكي',
-                subtitle: 'متابعة أرباحك وفروعك من جيبك',
+                subtitle: 'متابعة أرباحك وفروعك لحظياً',
                 icon: Bot,
                 iconBg: 'bg-tangerine-100 dark:bg-tangerine-950/80',
                 iconColor: 'text-tangerine-600 dark:text-tangerine-400',
               },
               {
                 id: 'clients',
-                title: 'متابعة العملاء وقفل الآجل',
-                subtitle: 'إشعار فواتير وسداد وقفل تلقائي للحد الأقصى',
+                title: 'متابعة ديون العملاء',
+                subtitle: 'تنبيهات وقفل آلي للحد الأقصى',
                 icon: Users,
                 iconBg: 'bg-primary-100 dark:bg-primary-950/80',
                 iconColor: 'text-primary-600 dark:text-cyan-400',
               },
               {
                 id: 'drugs',
-                title: 'البحث بالسوق المصري',
-                subtitle: '+26,000 دواء بأسعارها وبدائلها',
+                title: 'دليل الأدوية المصرية',
+                subtitle: '+26 ألف دواء وبدائلها المعتمدة',
                 icon: Database,
                 iconBg: 'bg-cyan-100 dark:bg-cyan-950/80',
                 iconColor: 'text-cyan-600 dark:text-cyan-400',
@@ -114,14 +115,14 @@ export default function Hero({ darkMode }) {
               {
                 id: 'shortages',
                 title: 'إرسال النواقص بضغطة زر',
-                subtitle: 'طلبيات فورية للمخازن والشركات',
+                subtitle: 'طلبيات فورية للشركات والمخازن',
                 icon: Send,
                 iconBg: 'bg-emerald-100 dark:bg-emerald-950/80',
                 iconColor: 'text-emerald-600 dark:text-emerald-400',
               },
               {
                 id: 'warehouses',
-                title: 'إمكانية تعدد الفروع',
+                title: 'تعدد الفروع والمخازن',
                 subtitle: 'ربط سحابي ومزامنة حية للمخزون',
                 icon: Building2,
                 iconBg: 'bg-tangerine-100 dark:bg-tangerine-950/80',
@@ -137,7 +138,7 @@ export default function Hero({ darkMode }) {
               },
               {
                 id: 'calculator',
-                title: 'حاسبة التوفير والأرباح',
+                title: 'حاسبة الأرباح والتوفير',
                 subtitle: 'منع خسائر الرواكد والصلاحية',
                 icon: TrendingUp,
                 iconBg: 'bg-primary-100 dark:bg-primary-950/80',
@@ -147,23 +148,23 @@ export default function Hero({ darkMode }) {
               <a
                 key={feat.id}
                 href={`#${feat.id}`}
-                className="p-3 sm:p-3.5 rounded-2xl glass-card border border-primary-200/80 dark:border-primary-800/80 hover:border-cyan-400 dark:hover:border-cyan-400 flex items-center justify-between gap-2 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-cyan-950/50 group cursor-pointer text-right select-none"
+                className="p-2.5 sm:p-3.5 rounded-2xl glass-card border border-primary-200/80 dark:border-primary-800/80 hover:border-cyan-400 dark:hover:border-cyan-400 flex items-start justify-between gap-1.5 sm:gap-2 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-cyan-950/50 group cursor-pointer text-right select-none"
                 title={`انتقل إلى قسم ${feat.title}`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${feat.iconBg} ${feat.iconColor} flex items-center justify-center flex-shrink-0 transition-transform duration-200 group-hover:scale-110 shadow-2xs`}>
-                    <feat.icon className="w-4 h-4" />
+                <div className="flex items-start gap-2 sm:gap-2.5 min-w-0 flex-1">
+                  <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl ${feat.iconBg} ${feat.iconColor} flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-110 shadow-2xs mt-0.5`}>
+                    <feat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold text-slate-800 dark:text-white leading-tight truncate group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-white leading-snug group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
                       {feat.title}
                     </p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate leading-tight">
+                    <p className="text-[9.5px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug line-clamp-2">
                       {feat.subtitle}
                     </p>
                   </div>
                 </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-all transform group-hover:translate-x-[-2px] group-hover:translate-y-[-2px] flex-shrink-0" />
+                <ArrowUpRight className="hidden sm:block w-3.5 h-3.5 text-slate-300 dark:text-slate-600 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-all transform group-hover:translate-x-[-2px] group-hover:translate-y-[-2px] shrink-0 mt-0.5" />
               </a>
             ))}
           </div>

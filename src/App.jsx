@@ -16,18 +16,18 @@ import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('credo_theme');
+    const saved = localStorage.getItem('credo_theme_mode');
     if (saved) return saved === 'dark';
-    return true; // Default to luxury dark mode
+    return false; // Default to clean, modern daytime light mode
   });
 
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('credo_theme', 'dark');
+      localStorage.setItem('credo_theme_mode', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('credo_theme', 'light');
+      localStorage.setItem('credo_theme_mode', 'light');
     }
   }, [darkMode]);
 
