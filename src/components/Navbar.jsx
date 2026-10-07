@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Moon, Sun, Download, Menu, X } from 'lucide-react';
 
-export default function Navbar({ darkMode, setDarkMode }) {
+export default function Navbar({ darkMode, setDarkMode, onOpenDownloadModal }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -84,16 +84,14 @@ export default function Navbar({ darkMode, setDarkMode }) {
               {darkMode ? <Sun className="w-4 h-4 text-amber-300 animate-spin-slow" /> : <Moon className="w-4 h-4 text-primary-700" />}
             </button>
 
-            {/* WhatsApp CTA Button */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 xl:px-6 py-2 xl:py-2.5 rounded-xl font-bold font-readex text-xs xl:text-sm text-white bg-gradient-to-r from-tangerine-500 via-tangerine-600 to-tangerine-700 hover:from-tangerine-600 hover:to-tangerine-800 shadow-glow-tangerine transition-all duration-200 hover:scale-[1.02] active:scale-95 border border-white/25 whitespace-nowrap shrink-0"
+            {/* Download CTA Button */}
+            <button
+              onClick={onOpenDownloadModal}
+              className="hidden sm:inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 xl:px-6 py-2 xl:py-2.5 rounded-xl font-bold font-readex text-xs xl:text-sm text-white bg-gradient-to-r from-tangerine-500 via-tangerine-600 to-tangerine-700 hover:from-tangerine-600 hover:to-tangerine-800 shadow-glow-tangerine transition-all duration-200 hover:scale-[1.02] active:scale-95 border border-white/25 whitespace-nowrap shrink-0 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5 xl:w-4 xl:h-4 shrink-0" />
               <span className="whitespace-nowrap tracking-wide">تحميل وتجربة البرنامج</span>
-            </a>
+            </button>
 
             {/* Mobile menu button */}
             <button
@@ -120,15 +118,16 @@ export default function Navbar({ darkMode, setDarkMode }) {
               </a>
             ))}
             <div className="pt-2">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-bold text-xs text-white bg-tangerine-500 hover:bg-tangerine-600 shadow-glow-tangerine"
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenDownloadModal();
+                }}
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-bold text-xs text-white bg-tangerine-500 hover:bg-tangerine-600 shadow-glow-tangerine cursor-pointer"
               >
                 <Download className="w-4 h-4" />
-                <span>تحميل وتجربة البرنامج (واتساب مباشر)</span>
-              </a>
+                <span>تحميل وتجربة البرنامج</span>
+              </button>
             </div>
           </div>
         )}

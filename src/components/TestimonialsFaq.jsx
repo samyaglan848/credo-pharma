@@ -4,7 +4,7 @@ import { HelpCircle, ChevronDown, ChevronUp, CheckCircle } from 'lucide-react';
 const faqs = [
   {
     q: "لماذا يُعتبر CREDO PHARMA أفضل برنامج صيدليات في مصر وأسرع سيستم إدارة صيدليات؟",
-    a: "يُعد CREDO PHARMA أفضل سيستم صيدليات في مصر وأسرع سيستم ادارة صيدليات بشهادة مئات الصيادلة؛ حيث يجمع بين إنهاء فاتورة البيع في أقل من 3 ثوانٍ، والعمل أوفلاين 100%، ومساعد واتساب ذكي يتابع أرباحك وخزينتك لحظياً، وقاعدة بيانات متكاملة لـ 26,000 دواء مصري وبدائلها الرسمية وأسعارها."
+    a: "يُعد CREDO PHARMA أفضل سيستم صيدليات في مصر وأسرع سيستم ادارة صيدليات حيث تم بنائه بمساعدة صيادلة لكي يلبي جميع احتياجاتهم الممكنة وتغطية جميع عيوب الانظمة الموجودة في السوق المصري محاولا تقديم اكبر وافضل تجربة متكاملة للصيادلة؛ حيث يجمع بين إنهاء فاتورة البيع في أقل من 3 ثوانٍ، والعمل أوفلاين 100%، ومساعد واتساب ذكي يتابع أرباحك وخزينتك لحظياً، وقاعدة بيانات متكاملة لـ 26,000 دواء مصري وبدائلها الرسمية وأسعارها."
   },
   {
     q: "كيف يتعامل السيستم مع ديون العملاء وتجاوز الحد الأقصى للآجل؟",
@@ -38,7 +38,7 @@ export default function TestimonialsFaq() {
   return (
     <section id="faq" className="py-16 lg:py-24 relative overflow-hidden bg-white/40 dark:bg-darkbg/40 border-t border-primary-100 dark:border-primary-900/50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-100 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 text-xs font-bold mb-3 border border-cyan-300 dark:border-cyan-800">
             <HelpCircle className="w-3.5 h-3.5 text-cyan-500" />
@@ -55,8 +55,8 @@ export default function TestimonialsFaq() {
         {/* Accordion */}
         <div className="space-y-3">
           {faqs.map((faq, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className="rounded-2xl glass-card border border-primary-200 dark:border-primary-800/80 overflow-hidden transition"
             >
               <button

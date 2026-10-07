@@ -1,7 +1,7 @@
 import React from 'react';
 import { Download, MessageCircle, Phone, CheckCircle2, Sparkles, Shield, Gift } from 'lucide-react';
 
-export default function PricingCtaSection() {
+export default function PricingCtaSection({ onOpenDownloadModal }) {
   const whatsappUrl = "https://wa.me/201060945097?text=" + encodeURIComponent("السلام عليكم، أود تجربة برنامج CREDO PHARMA وتحميل النسخة التجريبية والحصول على عرض الإطلاق الخاص.");
 
   return (
@@ -31,15 +31,13 @@ export default function PricingCtaSection() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-black text-base sm:text-lg text-white bg-gradient-to-r from-tangerine-500 via-tangerine-600 to-tangerine-700 hover:from-tangerine-600 hover:to-tangerine-800 shadow-glow-tangerine transition-all hover:scale-105 active:scale-95"
+            <button
+              onClick={onOpenDownloadModal}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-black text-base sm:text-lg text-white bg-gradient-to-r from-tangerine-500 via-tangerine-600 to-tangerine-700 hover:from-tangerine-600 hover:to-tangerine-800 shadow-glow-tangerine transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
               <Download className="w-5 h-5" />
-              <span>تحميل وتجربة النسخة (عبر الواتساب)</span>
-            </a>
+              <span>تحميل وتجربة النسخة المجانية فوراً</span>
+            </button>
 
             <a
               href="tel:01001329131"

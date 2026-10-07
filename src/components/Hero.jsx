@@ -6,7 +6,7 @@ import {
   Send, Wallet, AlertTriangle, Package
 } from 'lucide-react';
 
-export default function Hero({ darkMode }) {
+export default function Hero({ darkMode, onOpenDownloadModal }) {
   const [time, setTime] = useState(new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }));
 
   useEffect(() => {
@@ -56,16 +56,14 @@ export default function Hero({ darkMode }) {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-10">
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-tangerine-500 via-tangerine-600 to-tangerine-700 hover:from-tangerine-600 hover:to-tangerine-800 shadow-glow-tangerine transition-all hover:scale-105 active:scale-95"
+            <button
+              onClick={onOpenDownloadModal}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-tangerine-500 via-tangerine-600 to-tangerine-700 hover:from-tangerine-600 hover:to-tangerine-800 shadow-glow-tangerine transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
               <Download className="w-4 h-4" />
               <span>تحميل وتجربة النسخة المجانية</span>
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/20 font-medium">واتساب مباشر</span>
-            </a>
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/20 font-medium">مباشر ومجاني</span>
+            </button>
 
             <a
               href="#pos"
