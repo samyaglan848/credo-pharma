@@ -100,7 +100,7 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
 
   const PUBLIC_RELEASE_DOWNLOAD_URL = 'https://github.com/samyaglan848/credo-pharma/releases/download/v1.0.33/Credo-Setup-1.0.33.exe';
 
-  // Trigger download - direct download into browser's downloads manager
+  // Trigger download - direct download into browser's downloads manager without opening any tabs or pages
   const triggerActualDownload = (data = leadResult) => {
     setDownloadStarted(true);
 
@@ -116,15 +116,19 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
         : PUBLIC_RELEASE_DOWNLOAD_URL;
     }
 
-    // Trigger browser download via link
+    // Trigger browser download directly in the current page
+    // Note: NEVER set target="_blank" because it forces the browser to open an external GitHub tab/page.
     const link = document.createElement('a');
     link.href = finalUrl;
     link.setAttribute('download', 'Credo-Setup-1.0.33.exe');
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
+    link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    setTimeout(() => {
+      try {
+        document.body.removeChild(link);
+      } catch (e) {}
+    }, 1000);
   };
 
   // Submit Handler
@@ -150,6 +154,11 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
       }
     };
 
+    // Immediately trigger direct silent download in the same page for desktop users
+    if (!deviceInfo.isMobile) {
+      triggerActualDownload(fallbackData);
+    }
+
     const apiUrl = import.meta.env.VITE_API_URL 
       ? `${import.meta.env.VITE_API_URL}/leads/submit` 
       : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001/api/leads/submit' : null);
@@ -174,39 +183,20 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
 
         if (response.ok && resData.success) {
           const leadData = resData.data;
-          if (!leadData.release?.downloadUrl || leadData.release.downloadUrl.includes('localhost')) {
-            leadData.release = {
-              ...leadData.release,
-              downloadUrl: PUBLIC_RELEASE_DOWNLOAD_URL,
-              version: '1.0.33',
-              fileSizeBytes: '101 MB'
-            };
-          }
           setLeadResult(leadData);
           setSubmitted(true);
-          setLoading(false);
-          // Auto-trigger instant download to browser
-          if (deviceInfo.isWindows) {
-            setTimeout(() => triggerActualDownload(leadData), 250);
-          }
-          return;
-        } else {
-          setErrors({ form: resData.message || 'حدث خطأ أثناء حفظ البيانات، يرجى المحاولة مرة أخرى.' });
           setLoading(false);
           return;
         }
       } catch (err) {
-        console.warn('API unreachable, proceeding with direct download flow:', err);
+        console.warn('API sync warning:', err);
       }
     }
 
-    // Direct download guarantee for production domain
+    // Direct download guarantee
     setLeadResult(fallbackData);
     setSubmitted(true);
     setLoading(false);
-    if (deviceInfo.isWindows) {
-      setTimeout(() => triggerActualDownload(fallbackData), 250);
-    }
   };
 
   // Copy link
@@ -459,8 +449,8 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
                 </p>
               </div>
 
-              {/* If Desktop Windows: Show Direct Download Trigger */}
-              {deviceInfo.isWindows ? (
+              {/* If Desktop: Show Direct Download Trigger */}
+              {!deviceInfo.isMobile ? (
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[#01222e] border border-slate-200 dark:border-slate-700 text-center space-y-3">
                   
                   <div className="inline-flex flex-wrap items-center justify-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 text-xs font-bold">
@@ -468,19 +458,15 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
                     <span>•</span>
                     <span>الحجم: {leadResult?.release?.fileSizeBytes || '101 MB'}</span>
                     <span>•</span>
-                    <span className="text-amber-600 dark:text-amber-400">ملف مضغوط كامل (ZIP)</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">تثبيت مباشر (.exe)</span>
                     <span>•</span>
                     <span>ويندوز 64-bit</span>
                   </div>
 
                   <p className="text-xs text-slate-600 dark:text-slate-300">
-                    {downloadStarted ? (
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500 animate-pulse" /> جاري التنزيل الآن... افحص مجلد التنزيلات (Downloads) في متصفحك.
-                      </span>
-                    ) : (
-                      'اضغط على الزر أدناه لبدء تنزيل حزمة Credo Pharma الشاملة فوراً:'
-                    )}
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 animate-pulse" /> تم إرسال ملف التثبيت إلى قائمة التنزيلات (Downloads) في متصفحك مباشرة!
+                    </span>
                   </p>
 
                   <button
@@ -488,7 +474,7 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
                     className="w-full py-3.5 px-6 rounded-2xl font-black text-sm sm:text-base text-white bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-500 hover:to-cyan-600 shadow-lg shadow-cyan-600/30 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer"
                   >
                     <Download className="w-5 h-5 animate-bounce-subtle" />
-                    <span>تحميل برنامج التثبيت المباشر (Credo-Setup-1.0.33.exe)</span>
+                    <span>إعادة التنزيل (Credo-Setup-1.0.33.exe)</span>
                   </button>
 
                   {/* Quick Installation Steps */}
