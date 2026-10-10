@@ -9,6 +9,7 @@ import ShortagesOrdersDemo from './components/ShortagesOrdersDemo.jsx';
 import WarehouseCompare from './components/WarehouseCompare.jsx';
 import CloudSecurity from './components/CloudSecurity.jsx';
 import RoiCalculator from './components/RoiCalculator.jsx';
+import PricingSection from './components/PricingSection.jsx';
 import TestimonialsFaq from './components/TestimonialsFaq.jsx';
 import PricingCtaSection from './components/PricingCtaSection.jsx';
 import Footer from './components/Footer.jsx';
@@ -91,6 +92,7 @@ export default function App() {
         <WarehouseCompare />
         <CloudSecurity />
         <RoiCalculator />
+        <PricingSection onOpenDownloadModal={() => setIsDownloadModalOpen(true)} />
         <TestimonialsFaq />
         <PricingCtaSection 
           onOpenDownloadModal={() => setIsDownloadModalOpen(true)} 

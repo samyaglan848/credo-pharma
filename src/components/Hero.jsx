@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useCredoConfig } from '../context/CredoConfigContext.jsx';
 import { 
   Download, Play, ShieldCheck, Zap, TrendingUp, Users, 
   ShoppingCart, Sparkles, Clock, ArrowUpRight, Award, 
@@ -7,6 +8,7 @@ import {
 } from 'lucide-react';
 
 export default function Hero({ darkMode, onOpenDownloadModal }) {
+  const { whatsappNumber, trialDays } = useCredoConfig();
   const [time, setTime] = useState(new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }));
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function Hero({ darkMode, onOpenDownloadModal }) {
     return () => clearInterval(timer);
   }, []);
 
-  const whatsappUrl = "https://wa.me/201060945097?text=" + encodeURIComponent("السلام عليكم، أود تجربة برنامج CREDO PHARMA وتحميل النسخة التجريبية والتفعيل.");
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("السلام عليكم، أود تجربة برنامج CREDO PHARMA وتحميل النسخة التجريبية والتفعيل.")}`;
 
   return (
     <section id="hero" className="relative pt-24 pb-14 lg:pt-32 lg:pb-20 overflow-hidden font-cairo">

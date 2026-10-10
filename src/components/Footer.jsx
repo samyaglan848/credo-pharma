@@ -1,8 +1,10 @@
 import React from 'react';
+import { useCredoConfig } from '../context/CredoConfigContext.jsx';
 import { Phone, MessageCircle, MapPin } from 'lucide-react';
 
 export default function Footer({ darkMode }) {
-  const whatsappUrl = "https://wa.me/201060945097?text=" + encodeURIComponent("السلام عليكم، أود التواصل بخصوص برنامج CREDO PHARMA");
+  const { whatsappNumber, contactPhone } = useCredoConfig();
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("السلام عليكم، أود التواصل بخصوص برنامج CREDO PHARMA")}`;
 
   return (
     <footer className="pt-12 pb-8 bg-gradient-to-b from-[#e8f4f8] to-[#d4ebf2] text-slate-700 border-t border-cyan-200/90 dark:bg-gradient-to-b dark:from-[#021017] dark:to-[#010a0f] dark:text-slate-300 dark:border-slate-800 transition-colors duration-300">

@@ -1,8 +1,10 @@
 import React from 'react';
+import { useCredoConfig } from '../context/CredoConfigContext.jsx';
 import { Download, MessageCircle, Phone, CheckCircle2, Sparkles, Shield, Gift } from 'lucide-react';
 
 export default function PricingCtaSection({ onOpenDownloadModal }) {
-  const whatsappUrl = "https://wa.me/201060945097?text=" + encodeURIComponent("السلام عليكم، أود تجربة برنامج CREDO PHARMA وتحميل النسخة التجريبية والحصول على عرض الإطلاق الخاص.");
+  const { whatsappNumber, trialDays } = useCredoConfig();
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("السلام عليكم، أود تجربة برنامج CREDO PHARMA وتحميل النسخة التجريبية والحصول على عرض الإطلاق الخاص.")}`;
 
   return (
     <section id="download" className="py-16 lg:py-24 relative overflow-hidden">

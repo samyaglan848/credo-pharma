@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useCredoConfig } from '../context/CredoConfigContext.jsx';
 import { MessageCircle, X } from 'lucide-react';
 
 export default function FloatingWhatsApp() {
+  const { whatsappNumber, trialDays } = useCredoConfig();
   const [tooltipVisible, setTooltipVisible] = useState(true);
-  const whatsappUrl = "https://wa.me/201060945097?text=" + encodeURIComponent("السلام عليكم، أود تجربة برنامج CREDO PHARMA وتحميل النسخة التجريبية");
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=` + encodeURIComponent(`السلام عليكم، أود تجربة برنامج CREDO PHARMA وتحميل النسخة التجريبية (${trialDays} يوماً)`);
 
   return (
     <div className="fixed bottom-6 left-6 z-50 flex items-center gap-3">
