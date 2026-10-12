@@ -15,6 +15,7 @@ import PricingCtaSection from './components/PricingCtaSection.jsx';
 import Footer from './components/Footer.jsx';
 import FloatingWhatsApp from './components/FloatingWhatsApp.jsx';
 import DownloadLeadModal from './components/DownloadLeadModal.jsx';
+import { getApiBase } from './lib/apiBase.js';
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -37,6 +38,9 @@ export default function App() {
 
   // Live website visitor tracking
   useEffect(() => {
+    const apiBase = getApiBase();
+    if (!apiBase) return; // مفيش سيرفر متحدد → مانبعتش أي طلبات
+
     let visitorId = localStorage.getItem('credo_visitor_id');
     if (!visitorId) {
       visitorId = 'vis_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
@@ -49,7 +53,7 @@ export default function App() {
 
     const sendPing = () => {
       try {
-        fetch('http://localhost:3001/api/leads/public/track-visit', {
+        fetch(`${apiBase}/api/leads/public/track-visit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

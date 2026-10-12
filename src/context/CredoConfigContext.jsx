@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getApiBase } from '../lib/apiBase.js';
 
 export const DEFAULT_CONFIG = {
   plans: {
@@ -66,13 +67,6 @@ const CredoConfigContext = createContext({
   lastUpdated: null
 });
 
-const getApiBase = () => {
-  if (typeof window === 'undefined') return 'http://localhost:3001';
-  if (import.meta.env?.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL.replace(/\/api\/.*$/, '').replace(/\/api$/, '');
-  }
-  return 'http://localhost:3001';
-};
 
 export function CredoConfigProvider({ children }) {
   const [config, setConfig] = useState(DEFAULT_CONFIG);
@@ -129,53 +123,37 @@ export function CredoConfigProvider({ children }) {
 
   useEffect(() => {
     const apiBase = getApiBase();
+    // مفيش سيرفر متحدد (VITE_API_URL) → الموقع يشتغل بالأسعار الافتراضية من غير ما يكلم localhost عند الزائر
+    if (!apiBase) return undefined;
 
-    // 1. Initial snapshot fetch
-    fetch(`${apiBase}/api/plans/website-config`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch config');
-        return res.json();
-      })
-      .then((json) => {
-        if (json?.data) {
-          applyConfig(json.data);
-          setIsLiveConnected(true);
-        }
-      })
-      .catch(() => {
-        // Graceful fallback to DEFAULT_CONFIG
-      });
+    // الأسعار والإعدادات من لوحة التراخيص: مرة عند الفتح وبعدين كل 5 دقايق
+    // (بدل اتصال مفتوح على طول — أخف على السيرفر ومناسب لـ Vercel)
+    let cancelled = false;
+    const loadConfig = (force = false) => {
+      if (!force && typeof document !== 'undefined' && document.hidden) return;
+      fetch(`${apiBase}/api/plans/website-config`)
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch config');
+          return res.json();
+        })
+        .then((json) => {
+          if (!cancelled && json?.data) {
+            applyConfig(json.data);
+            setIsLiveConnected(true);
+          }
+        })
+        .catch(() => {
+          // Graceful fallback to DEFAULT_CONFIG / آخر إعدادات وصلت
+          if (!cancelled) setIsLiveConnected(false);
+        });
+    };
 
-    // 2. Real-time stream using native Server-Sent Events (SSE)
-    let eventSource = null;
-    try {
-      eventSource = new EventSource(`${apiBase}/api/plans/live-stream`);
-
-      eventSource.onopen = () => {
-        setIsLiveConnected(true);
-      };
-
-      eventSource.onmessage = (event) => {
-        try {
-          const freshData = JSON.parse(event.data);
-          applyConfig(freshData);
-          setIsLiveConnected(true);
-        } catch (e) {
-          console.error('[Credo Live Stream] Parse error:', e);
-        }
-      };
-
-      eventSource.onerror = () => {
-        setIsLiveConnected(false);
-      };
-    } catch (e) {
-      // EventSource failed or unsupported
-    }
+    loadConfig(true);
+    const interval = setInterval(loadConfig, 5 * 60 * 1000);
 
     return () => {
-      if (eventSource) {
-        eventSource.close();
-      }
+      cancelled = true;
+      clearInterval(interval);
     };
   }, []);
 

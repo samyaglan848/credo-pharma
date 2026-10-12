@@ -2,6 +2,7 @@
 // src/components/DownloadLeadModal.jsx — Smart Download Gate & Lead Tracker
 // =============================================================
 import React, { useState, useEffect } from 'react';
+import { getApiBase } from '../lib/apiBase.js';
 import { 
   X, Download, CheckCircle2, AlertCircle, Building2, User, 
   Phone, Mail, MapPin, Monitor, Smartphone, ArrowRight,
@@ -104,16 +105,13 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
   const triggerActualDownload = (data = leadResult) => {
     setDownloadStarted(true);
 
-    const leadId = data?.lead?.id || '';
     let finalUrl = data?.release?.downloadUrl;
 
     if (!finalUrl || finalUrl.includes('localhost') || finalUrl.includes('127.0.0.1')) {
       finalUrl = PUBLIC_RELEASE_DOWNLOAD_URL;
     } else if (finalUrl.includes('download-file')) {
-      const apiBase = import.meta.env.VITE_API_URL;
-      finalUrl = apiBase 
-        ? `${apiBase}/leads/download-file?leadId=${encodeURIComponent(leadId)}`
-        : PUBLIC_RELEASE_DOWNLOAD_URL;
+      // ملف التثبيت كبير (~100MB) — بيتنزل دايماً من GitHub مش من جهاز سيرفر التراخيص
+      finalUrl = PUBLIC_RELEASE_DOWNLOAD_URL;
     }
 
     // Trigger browser download directly in the current page
@@ -159,9 +157,8 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
       triggerActualDownload(fallbackData);
     }
 
-    const apiUrl = import.meta.env.VITE_API_URL 
-      ? `${import.meta.env.VITE_API_URL}/leads/submit` 
-      : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001/api/leads/submit' : null);
+    const apiBase = getApiBase();
+    const apiUrl = apiBase ? `${apiBase}/api/leads/submit` : null;
 
     if (apiUrl) {
       try {
