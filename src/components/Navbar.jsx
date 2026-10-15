@@ -1,11 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useCredoConfig } from '../context/CredoConfigContext.jsx';
+import { getApiBase } from '../lib/apiBase.js';
 import { Moon, Sun, Download, Menu, X } from 'lucide-react';
 
 export default function Navbar({ darkMode, setDarkMode, onOpenDownloadModal }) {
   const { whatsappNumber, trialDays } = useCredoConfig();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [appVersion, setAppVersion] = useState(() => {
+    try { return localStorage.getItem('credo_latest_version') || ''; } catch { return ''; }
+  });
+
+  // رقم الإصدار بييجي من سيرفر التراخيص (أحدث إصدار منشور) — بيتحدث لوحده كل 10 دقايق
+  useEffect(() => {
+    const apiBase = getApiBase();
+    if (!apiBase) return undefined;
+    let cancelled = false;
+    const loadVersion = () => {
+      fetch(`${apiBase}/api/leads/latest-release`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((json) => {
+          const v = json?.data?.version ? String(json.data.version).replace(/^v/i, '').trim() : '';
+          if (!cancelled && v) {
+            setAppVersion(v);
+            try { localStorage.setItem('credo_latest_version', v); } catch {}
+          }
+        })
+        .catch(() => {});
+    };
+    loadVersion();
+    const interval = setInterval(loadVersion, 10 * 60 * 1000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,9 +83,11 @@ export default function Navbar({ darkMode, setDarkMode, onOpenDownloadModal }) {
             </a>
 
             {/* Version Badge - Under the logo at the corner, compact and stylish */}
+            {appVersion && (
             <span className="absolute -bottom-2.5 start-1 inline-flex items-center text-[7.5px] sm:text-[8px] font-extrabold font-jakarta tracking-wider px-1 py-[0.5px] leading-tight rounded bg-cyan-100/90 text-primary-950 border border-cyan-300/80 dark:bg-[#013545]/90 dark:text-cyan-200 dark:border-cyan-300/60 shadow-2xs select-none pointer-events-none">
-              v1.0.31
+              v{appVersion}
             </span>
+            )}
           </div>
 
           {/* Center: Desktop Navigation Links (Properly balanced font size, tight padding & spacing to avoid any crowding) */}
