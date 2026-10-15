@@ -11,22 +11,39 @@ export default function Navbar({ darkMode, setDarkMode, onOpenDownloadModal }) {
     try { return localStorage.getItem('credo_latest_version') || ''; } catch { return ''; }
   });
 
-  // رقم الإصدار بييجي من سيرفر التراخيص (أحدث إصدار منشور) — بيتحدث لوحده كل 10 دقايق
+  // رقم الإصدار: أحدث إصدار منشور على GitHub Releases + سيرفر التراخيص (لو شغال) — بناخد الأعلى
+  // بيتحدث لوحده كل 10 دقايق، فأول ما يتنشر إصدار جديد الرقم يتغير من غير أي تعديل في الموقع
   useEffect(() => {
-    const apiBase = getApiBase();
-    if (!apiBase) return undefined;
     let cancelled = false;
-    const loadVersion = () => {
-      fetch(`${apiBase}/api/leads/latest-release`)
-        .then((res) => (res.ok ? res.json() : null))
-        .then((json) => {
-          const v = json?.data?.version ? String(json.data.version).replace(/^v/i, '').trim() : '';
-          if (!cancelled && v) {
-            setAppVersion(v);
-            try { localStorage.setItem('credo_latest_version', v); } catch {}
-          }
-        })
-        .catch(() => {});
+    const clean = (v) => (v ? String(v).replace(/^v/i, '').trim() : '');
+    const cmp = (a, b) => {
+      const pa = a.split('.').map((n) => parseInt(n, 10) || 0);
+      const pb = b.split('.').map((n) => parseInt(n, 10) || 0);
+      for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+        const d = (pa[i] || 0) - (pb[i] || 0);
+        if (d) return d;
+      }
+      return 0;
+    };
+    const fromGithub = () =>
+      fetch('https://api.github.com/repos/samyaglan848/credo-pharma/releases/latest')
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => clean(j?.tag_name))
+        .catch(() => '');
+    const fromServer = () => {
+      const apiBase = getApiBase();
+      if (!apiBase) return Promise.resolve('');
+      return fetch(`${apiBase}/api/leads/latest-release`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((j) => clean(j?.data?.version))
+        .catch(() => '');
+    };
+    const loadVersion = async () => {
+      const found = (await Promise.all([fromGithub(), fromServer()])).filter(Boolean);
+      if (cancelled || !found.length) return;
+      const latest = found.sort(cmp).pop();
+      setAppVersion(latest);
+      try { localStorage.setItem('credo_latest_version', latest); } catch {}
     };
     loadVersion();
     const interval = setInterval(loadVersion, 10 * 60 * 1000);
