@@ -74,17 +74,6 @@ export default function Footer({ darkMode }) {
 
         </div>
 
-        {/* SEO Keywords Tag Cloud */}
-        <div className="py-4 border-b border-cyan-200/60 dark:border-slate-800/60 flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 font-tajawal">
-          <span className="font-bold text-slate-700 dark:text-slate-300">الكلمات الأكثر بحثاً:</span>
-          <a href="#hero" className="px-2.5 py-1 rounded-md bg-white/70 dark:bg-slate-800/70 border border-cyan-200/60 dark:border-slate-700/80 hover:text-cyan-600 dark:hover:text-cyan-400 transition">افضل برنامج صيدليات في مصر</a>
-          <a href="#hero" className="px-2.5 py-1 rounded-md bg-white/70 dark:bg-slate-800/70 border border-cyan-200/60 dark:border-slate-700/80 hover:text-cyan-600 dark:hover:text-cyan-400 transition">افضل سيستم صيدليات في مصر</a>
-          <a href="#hero" className="px-2.5 py-1 rounded-md bg-white/70 dark:bg-slate-800/70 border border-cyan-200/60 dark:border-slate-700/80 hover:text-cyan-600 dark:hover:text-cyan-400 transition">افضل سيستم ادارة صيدليات في مصر</a>
-          <a href="#hero" className="px-2.5 py-1 rounded-md bg-white/70 dark:bg-slate-800/70 border border-cyan-200/60 dark:border-slate-700/80 hover:text-cyan-600 dark:hover:text-cyan-400 transition">اسرع سيستم ادارة صيدليات في مصر</a>
-          <a href="#pos" className="px-2.5 py-1 rounded-md bg-white/70 dark:bg-slate-800/70 border border-cyan-200/60 dark:border-slate-700/80 hover:text-cyan-600 dark:hover:text-cyan-400 transition">برنامج كاشير صيدلية</a>
-          <a href="#drugs" className="px-2.5 py-1 rounded-md bg-white/70 dark:bg-slate-800/70 border border-cyan-200/60 dark:border-slate-700/80 hover:text-cyan-600 dark:hover:text-cyan-400 transition">دليل أدوية وبدائل مصر</a>
-        </div>
-
         {/* Copyright */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-500 font-tajawal">
           <p>© {new Date().getFullYear()} CREDO PHARMA. جميع الحقوق محفوظة.</p>
