@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TutorialLinks from './TutorialLinks.jsx';
 import { 
   Send, Truck, CheckCircle2, FileSpreadsheet, PackageCheck, 
   AlertTriangle, MessageCircle, Building, RefreshCw, ShoppingCart, 
@@ -109,6 +110,7 @@ export default function ShortagesOrdersDemo() {
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             السيستم يرصد الأصناف التي وصلت لحد الطلب أو طلبها العملاء تلقائياً، ويجهز طلبيات دقيقة ومقسمة لكل شركة توزيع (ابن سينا، المتحدة، فارما أوفرسيز) لترسلها عبر الواتساب أو شيت إلكتروني فوراً دون كتابة يدوية.
           </p>
+          <TutorialLinks section="shortages" />
         </div>
 
         {/* Real Interactive Order Screen Mockup */}

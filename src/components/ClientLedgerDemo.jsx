@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TutorialLinks from './TutorialLinks.jsx';
 import { 
   Users, MessageCircle, FileText, Send, CheckCircle, 
   AlertCircle, ShieldCheck, UserCheck, ArrowUpRight, Smartphone,
@@ -87,6 +88,7 @@ export default function ClientLedgerDemo() {
           <p className="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto font-normal">
             وداعاً لدفاتر الشكك المفقودة وخسائر الديون المعدومة. نظام <span className="font-bold text-slate-900 dark:text-white">CREDO PHARMA</span> يتابع العميل خطوة بخطوة بفواتيره ودفعاته، ويجمد المعاملات فور تجاوز السقف المسموح، مع تنبيهات دورية في منتصف ونهاية كل شهر.
           </p>
+          <TutorialLinks section="clients" />
         </div>
 
         {/* Interactive Scenario Tabs Bar */}

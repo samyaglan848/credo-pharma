@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TutorialLinks from './TutorialLinks.jsx';
 import { 
   Database, Search, Pill, Sparkles, Check, ArrowRight, 
   Layers, AlertTriangle, ShieldCheck
@@ -79,6 +80,7 @@ export default function DrugSearchDemo() {
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
             ابحث بالاسم التجاري، العلمي، أو المادة الفعالة. عندما ينقص صنف معين، يعرض لك السيستم البدائل المتوفرة فوراً بنفس المادة وبأسعارها الحالية لتلبية احتياج المريض دون خسارة البيعة.
           </p>
+          <TutorialLinks section="drugs" />
         </div>
 
         {/* Live Search Interactive Box */}

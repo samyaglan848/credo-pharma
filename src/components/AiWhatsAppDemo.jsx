@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TutorialLinks from './TutorialLinks.jsx';
 import { 
   Bot, MessageSquare, Send, Sparkles, CheckCheck, 
   HelpCircle, Globe, Shield, Smartphone, ArrowRight
@@ -63,6 +64,7 @@ export default function AiWhatsAppDemo() {
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             سواء كنت في منزلك، في عطلة، أو مسافراً خارج البلاد؛ أرسل رسالة عادية على الواتساب ليسرد لك المساعد الذكي كل ما يدور في صيدليتك وفروعك بدقة متناهية ولحظياً.
           </p>
+          <TutorialLinks section="ai" />
         </div>
 
         {/* Content Grid: Features on Right, WhatsApp Simulator on Left */}

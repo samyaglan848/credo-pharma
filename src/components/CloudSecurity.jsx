@@ -1,4 +1,5 @@
 import React from 'react';
+import TutorialLinks from './TutorialLinks.jsx';
 import { ShieldCheck, Cloud, WifiOff, RefreshCcw, Lock, HardDrive, CheckCircle2 } from 'lucide-react';
 
 export default function CloudSecurity() {
@@ -18,6 +19,7 @@ export default function CloudSecurity() {
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             تم بناء Credo Pharma بمعمارية هجينة تعمل أوفلاين دون الحاجة للإنترنت، مع نسخ تلقائي مشفر إلى Google Drive و Mega في الخلفية دون أي مجهود منك.
           </p>
+          <TutorialLinks section="security" />
         </div>
 
         {/* 4 Pillars Grid */}

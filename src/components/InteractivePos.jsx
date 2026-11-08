@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TutorialLinks from './TutorialLinks.jsx';
 import { 
   Barcode, ShoppingCart, Plus, Minus, Trash2, Printer, 
   Sparkles, CheckCircle2, Zap, Tag, RefreshCw, Layers
@@ -92,6 +93,7 @@ export default function InteractivePos() {
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
             صُممت واجهة البيع ليعمل عليها أي مساعد أو صيدلي من الدقيقة الأولى؛ بيع بالباركود، بالعلبة أو الشريط أو القرص بنقرة زر، مع خصومات فورية وطباعة في جزء من الثانية.
           </p>
+          <TutorialLinks section="pos" />
         </div>
 
         {/* Live Simulator */}

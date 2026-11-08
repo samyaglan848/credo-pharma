@@ -65,6 +65,7 @@ export default function Navbar({ darkMode, setDarkMode, onOpenDownloadModal }) {
     { name: 'العملاء والآجل', href: '#clients' },
     { name: 'دليل الأدوية', href: '#drugs' },
     { name: 'المخازن والفروع', href: '#warehouses' },
+    { name: 'فيديوهات الشرح', href: '#tutorials' },
     { name: 'الباقات والأسعار', href: '#pricing' },
     { name: 'حاسبة التوفير', href: '#calculator' },
     { name: 'الأسئلة الشائعة', href: '#faq' },

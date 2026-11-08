@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TutorialLinks from './TutorialLinks.jsx';
 import { 
   Building2, ArrowLeftRight, BarChart3, TrendingUp, 
   Layers, Package, Check, RefreshCw
@@ -28,6 +29,7 @@ export default function WarehouseCompare() {
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             سواء كنت تدير صيدلية واحدة بمخزن فرعي أو سلسلة فروع متعددة؛ يمنحك Credo السيطرة الكاملة على نقل البضاعة، جرد الأرصدة، ومنع العجز والسرقات.
           </p>
+          <TutorialLinks section="warehouses" />
         </div>
 
         {/* 3 Branches Comparison Cards */}
