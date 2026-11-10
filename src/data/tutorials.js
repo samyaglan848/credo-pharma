@@ -25,6 +25,7 @@ export const TUTORIALS = {
   aiDashboard: { id: '4DaZd6held8', title: 'لوحة تحليلات الذكاء الاصطناعي', desc: 'توصيات وتنبيهات المخزون والمبيعات أول بأول.' },
   branches:    { id: '1GQmLWhhvFY', title: 'إدارة الفروع', desc: 'تحويل البضاعة بين الفروع وإضافة فرع جديد.' },
   staff:       { id: 'ePnNsCcXWjQ', title: 'العضوية والموظفين والصلاحيات', desc: 'باقتك، وحسابات الموظفين، وصلاحيات كل واحد.' },
+  settings:    { id: 'bx4xXpOulig', title: 'إعدادات النظام والتشغيل', desc: 'النسخ الاحتياطي، والواتساب وقوالب الرسائل، وإعدادات المساعد الذكي.' },
 };
 
 // الفيديوهات اللي بتظهر كزراير جنب كل قسم في الصفحة الرئيسية
@@ -35,7 +36,7 @@ export const SECTION_TUTORIALS = {
   drugs:      ['inquiry', 'addItem', 'quickUpdate'],
   shortages:  ['shortages'],
   warehouses: ['branches', 'stocktake'],
-  security:   ['staff'],
+  security:   ['staff', 'settings'],
 };
 
 // تقسيم مكتبة الشرح
@@ -46,5 +47,5 @@ export const LIBRARY_GROUPS = [
   { title: 'الأصناف والمخزون', items: ['addItem', 'quickUpdate', 'inquiry', 'shortages', 'stocktake'] },
   { title: 'الحسابات والتقارير', items: ['statements', 'reports'] },
   { title: 'الذكاء الاصطناعي', items: ['aiAssistant', 'aiDashboard'] },
-  { title: 'الإدارة والفروع', items: ['branches', 'staff'] },
+  { title: 'الإدارة والفروع', items: ['branches', 'staff', 'settings'] },
 ];
