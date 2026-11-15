@@ -18,6 +18,13 @@ const EGYPT_GOVERNORATES = [
   'شمال سيناء', 'جنوب سيناء'
 ];
 
+const FALLBACK_RELEASE = {
+  version: '1.0.42',
+  downloadUrl: 'https://github.com/samyaglan848/credo-pharma/releases/download/v1.0.42/Credo-Setup-1.0.42.exe',
+  fileName: 'Credo-Setup-1.0.42.exe',
+  fileSizeBytes: '107 MB'
+};
+
 export default function DownloadLeadModal({ isOpen, onClose }) {
   // Device Detection
   const [deviceInfo, setDeviceInfo] = useState({ isWindows: true, isMobile: false, deviceType: 'DESKTOP_WINDOWS' });
@@ -48,6 +55,28 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
   const [leadResult, setLeadResult] = useState(null);
   const [downloadStarted, setDownloadStarted] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // آخر إصدار منشور على مستودع الإصدارات العام — بيتجاب أوتوماتيك من GitHub
+  // فاللينك بيفضل دايماً على آخر نسخة من غير ما نعدّل الموقع مع كل إصدار.
+  const [latest, setLatest] = useState(FALLBACK_RELEASE);
+  useEffect(() => {
+    let cancelled = false;
+    fetch('https://api.github.com/repos/samyaglan848/credo-pharma/releases/latest')
+      .then(r => (r.ok ? r.json() : null))
+      .then(rel => {
+        if (cancelled || !rel) return;
+        const exe = (rel.assets || []).find(a => /.exe$/i.test(a.name));
+        if (!exe) return;
+        setLatest({
+          version: String(rel.tag_name || '').replace(/^v/, '') || FALLBACK_RELEASE.version,
+          downloadUrl: exe.browser_download_url,
+          fileName: exe.name,
+          fileSizeBytes: Math.round(exe.size / 1024 / 1024) + ' MB'
+        });
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
 
   // Close on Escape key
   useEffect(() => {
@@ -99,26 +128,18 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
     return Object.keys(errs).length === 0;
   };
 
-  const PUBLIC_RELEASE_DOWNLOAD_URL = 'https://github.com/samyaglan848/credo-pharma/releases/download/v1.0.33/Credo-Setup-1.0.33.exe';
-
   // Trigger download - direct download into browser's downloads manager without opening any tabs or pages
   const triggerActualDownload = (data = leadResult) => {
     setDownloadStarted(true);
 
-    let finalUrl = data?.release?.downloadUrl;
-
-    if (!finalUrl || finalUrl.includes('localhost') || finalUrl.includes('127.0.0.1')) {
-      finalUrl = PUBLIC_RELEASE_DOWNLOAD_URL;
-    } else if (finalUrl.includes('download-file')) {
-      // ملف التثبيت كبير (~100MB) — بيتنزل دايماً من GitHub مش من جهاز سيرفر التراخيص
-      finalUrl = PUBLIC_RELEASE_DOWNLOAD_URL;
-    }
+    // التحميل دايماً من مستودع الإصدارات العام (آخر نسخة)، مش من رابط سيرفر التراخيص
+    const finalUrl = latest.downloadUrl;
 
     // Trigger browser download directly in the current page
     // Note: NEVER set target="_blank" because it forces the browser to open an external GitHub tab/page.
     const link = document.createElement('a');
     link.href = finalUrl;
-    link.setAttribute('download', 'Credo-Setup-1.0.33.exe');
+    link.setAttribute('download', latest.fileName);
     link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
@@ -145,11 +166,7 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
         phone: formData.phone.trim(),
         governorate: formData.governorate
       },
-      release: { 
-        version: '1.0.33', 
-        downloadUrl: PUBLIC_RELEASE_DOWNLOAD_URL, 
-        fileSizeBytes: '101 MB' 
-      }
+      release: latest
     };
 
     // Immediately trigger direct silent download in the same page for desktop users
@@ -198,7 +215,7 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
 
   // Copy link
   const handleCopy = () => {
-    const linkToCopy = leadResult?.release?.downloadUrl || PUBLIC_RELEASE_DOWNLOAD_URL;
+    const linkToCopy = latest.downloadUrl;
     navigator.clipboard.writeText(linkToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -210,7 +227,7 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
     if (cleanPhone.startsWith('0')) cleanPhone = '2' + cleanPhone;
     if (!cleanPhone.startsWith('20')) cleanPhone = '20' + cleanPhone;
 
-    const downloadLink = leadResult?.release?.downloadUrl || PUBLIC_RELEASE_DOWNLOAD_URL;
+    const downloadLink = latest.downloadUrl;
     const text = encodeURIComponent(
       `مرحباً دكتور ${formData.doctorName}،\n` +
       `رابط تحميل برنامج نظام Credo Pharma المباشر لصيدليتك (${formData.pharmacyName}):\n` +
@@ -451,9 +468,9 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-[#01222e] border border-slate-200 dark:border-slate-700 text-center space-y-3">
                   
                   <div className="inline-flex flex-wrap items-center justify-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 text-xs font-bold">
-                    <span>الإصدار: v{leadResult?.release?.version || '1.0.33'}</span>
+                    <span>الإصدار: v{latest.version}</span>
                     <span>•</span>
-                    <span>الحجم: {leadResult?.release?.fileSizeBytes || '101 MB'}</span>
+                    <span>الحجم: {latest.fileSizeBytes}</span>
                     <span>•</span>
                     <span className="text-emerald-600 dark:text-emerald-400 font-bold">تثبيت مباشر (.exe)</span>
                     <span>•</span>
@@ -471,7 +488,7 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
                     className="w-full py-3.5 px-6 rounded-2xl font-black text-sm sm:text-base text-white bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-500 hover:to-cyan-600 shadow-lg shadow-cyan-600/30 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2.5 cursor-pointer"
                   >
                     <Download className="w-5 h-5 animate-bounce-subtle" />
-                    <span>إعادة التنزيل (Credo-Setup-1.0.33.exe)</span>
+                    <span>إعادة التنزيل ({latest.fileName})</span>
                   </button>
 
                   {/* Quick Installation Steps */}
@@ -480,7 +497,7 @@ export default function DownloadLeadModal({ isOpen, onClose }) {
                       📋 خطوات تشغيل النظام في صيدليتك:
                     </span>
                     <ol className="text-[11px] text-slate-600 dark:text-slate-400 space-y-1.5 list-decimal list-inside">
-                      <li>اضغط نقرتين على ملف <strong>Credo-Setup-1.0.33.exe</strong> فور انتهاء التحميل (تثبيت مباشر بدون فك ضغط).</li>
+                      <li>اضغط نقرتين على ملف <strong>{latest.fileName}</strong> فور انتهاء التحميل (تثبيت مباشر بدون فك ضغط).</li>
                       <li>اتبع خطوات التثبيت بالضغط على Next ثم Install.</li>
                       <li>سيفتح البرنامج تلقائياً ومعه الباك اند المحمي وقاعدة بيانات الـ <strong>27,829 صنفاً</strong>.</li>
                       <li>اضغط على <strong>"تفعيل عبر واتساب"</strong> للحصول على كود ترخيصك التجريبي فوراً.</li>
