@@ -18,10 +18,11 @@ const EGYPT_GOVERNORATES = [
   'شمال سيناء', 'جنوب سيناء'
 ];
 
+// لو GitHub مارجعش آخر إصدار: صفحة "آخر إصدار" — بتفضل شغالة دايماً حتى بعد مسح الإصدارات القديمة
 const FALLBACK_RELEASE = {
-  version: '1.0.42',
-  downloadUrl: 'https://github.com/samyaglan848/credo-pharma/releases/download/v1.0.42/Credo-Setup-1.0.42.exe',
-  fileName: 'Credo-Setup-1.0.42.exe',
+  version: '1.0.45',
+  downloadUrl: 'https://github.com/samyaglan848/credo-pharma/releases/latest',
+  fileName: 'Credo-Setup.exe',
   fileSizeBytes: '107 MB'
 };
 
