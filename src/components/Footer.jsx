@@ -76,7 +76,7 @@ export default function Footer({ darkMode }) {
 
         {/* Copyright */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-500 font-tajawal">
-          <p>© {new Date().getFullYear()} CREDO PHARMA. جميع الحقوق محفوظة.</p>
+          <p><a href="/demo/" aria-label="©" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>©</a> {new Date().getFullYear()} CREDO PHARMA. جميع الحقوق محفوظة.</p>
           <p className="flex items-center gap-1">
             صُنع بعناية فائقة لخدمة صيادلة مصر والوطن العربي
           </p>

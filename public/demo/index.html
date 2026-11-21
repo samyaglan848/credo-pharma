@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="/demo/favicon.png" />
+  <title>Credo — تجربة البرنامج</title>
+  <style>
+    :root { --brand: #02475e; --brand2: #00607a; --bg: #eef5f8; --card: #ffffff; --text: #0f2a35; --muted: #5b7380; --danger: #be123c; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #0b1720; --card: #12222c; --text: #e6f1f5; --muted: #93a9b4; } }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font-family: Cairo, Tahoma, 'Segoe UI', sans-serif; }
+    #gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .card { width: 100%; max-width: 420px; background: var(--card); border-radius: 24px; padding: 28px 24px; box-shadow: 0 20px 60px rgba(2, 71, 94, .18); text-align: center; }
+    .logo { width: 180px; max-width: 70%; margin: 0 auto 6px; display: block; }
+    h1 { font-size: 20px; margin: 8px 0 4px; }
+    p { margin: 0 0 18px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    input { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1.5px solid #cfe0e7; font: 600 15px inherit; background: transparent; color: var(--text); text-align: center; letter-spacing: 1px; }
+    input:focus { outline: none; border-color: var(--brand2); }
+    button { margin-top: 12px; width: 100%; padding: 12px; border: 0; border-radius: 14px; background: linear-gradient(90deg, var(--brand), var(--brand2)); color: #fff; font: 800 15px inherit; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: wait; }
+    label.rem { display: flex; gap: 6px; align-items: center; justify-content: center; margin-top: 12px; font-size: 12px; color: var(--muted); cursor: pointer; }
+    .err { color: var(--danger); font-size: 13px; font-weight: 700; margin-top: 10px; min-height: 18px; }
+  </style>
+</head>
+<body>
+  <div id="gate">
+    <form class="card" id="f" autocomplete="off">
+      <img class="logo" src="/demo/assets/credo-logo-brand-ClQst5ri.png" alt="Credo" onerror="this.style.display='none'" />
+      <h1>تجربة برنامج Credo</h1>
+      <p>نسخة كاملة من البرنامج تقدر تجرّبها من المتصفح — بيع وشراء وأصناف ونواقص وتقارير.<br />اكتب كلمة السر اللي وصلتك علشان تدخل.</p>
+      <input id="pw" type="password" placeholder="كلمة السر" autofocus />
+      <label class="rem"><input id="rem" type="checkbox" style="width:auto" checked /> افتكرني على الجهاز ده</label>
+      <button id="go" type="submit">ادخل على التجربة</button>
+      <div class="err" id="err"></div>
+    </form>
+  </div>
+  <div id="root"></div>
+  <script>
+    (function () {
+      var REM_KEY = 'credo_demo_pw';
+      var b64 = function (s) { var bin = atob(s); var a = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return a; };
+      var payloadP = fetch('/demo/app.bin', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('load'); return r.json(); });
+
+      async function decryptAll(password) {
+        var p = await payloadP;
+        var base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+        var key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64(p.salt), iterations: p.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+        var dec = async function (x) { return new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(x.iv) }, key, b64(x.data))); };
+        var check = new TextDecoder().decode(await dec(p.check));
+        if (check !== 'credo-demo-ok') throw new Error('bad');
+        return { js: await dec(p.js), css: await dec(p.css) };
+      }
+
+      async function start(password, remember) {
+        var out = await decryptAll(password);
+        try { if (remember) localStorage.setItem(REM_KEY, password); } catch (e) {}
+        var style = document.createElement('style');
+        style.textContent = new TextDecoder().decode(out.css);
+        document.head.appendChild(style);
+        document.getElementById('gate').remove();
+        document.documentElement.setAttribute('lang', 'ar');
+        var url = URL.createObjectURL(new Blob([out.js], { type: 'text/javascript' }));
+        var s = document.createElement('script');
+        s.type = 'module';
+        s.src = url;
+        document.body.appendChild(s);
+      }
+
+      var form = document.getElementById('f');
+      var err = document.getElementById('err');
+      var btn = document.getElementById('go');
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        err.textContent = '';
+        btn.disabled = true;
+        btn.textContent = 'بيفتح...';
+        try {
+          await start(document.getElementById('pw').value, document.getElementById('rem').checked);
+        } catch (x) {
+          err.textContent = x && x.message === 'load' ? 'مقدرتش أحمّل التجربة — اتأكد من النت وجرّب تاني' : 'كلمة السر مش صحيحة';
+          btn.disabled = false;
+          btn.textContent = 'ادخل على التجربة';
+        }
+      });
+      // اتفتح قبل كده على الجهاز ده
+      try {
+        var saved = localStorage.getItem(REM_KEY);
+        if (saved) start(saved, true).catch(function () { localStorage.removeItem(REM_KEY); });
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
