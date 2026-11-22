@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
+  <meta name="color-scheme" content="light only" />
   <link rel="icon" type="image/png" href="/demo/favicon.png" />
   <title>Credo — تجربة البرنامج</title>
-  <style>
+  <style id="gate-style">
+    :root { color-scheme: light; }
     :root { --brand: #02475e; --brand2: #00607a; --bg: #eef5f8; --card: #ffffff; --text: #0f2a35; --muted: #5b7380; --danger: #be123c; }
-    @media (prefers-color-scheme: dark) { :root { --bg: #0b1720; --card: #12222c; --text: #e6f1f5; --muted: #93a9b4; } }
     * { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font-family: Cairo, Tahoma, 'Segoe UI', sans-serif; }
     #gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; }
@@ -47,20 +48,27 @@
         var p = await payloadP;
         var base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
         var key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64(p.salt), iterations: p.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
-        var dec = async function (x) { return new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(x.iv) }, key, b64(x.data))); };
+        var gunzip = async function (u8) { return new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()); };
+        var dec = async function (x) { var raw = new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(x.iv) }, key, b64(x.data))); return p.gz ? gunzip(raw) : raw; };
         var check = new TextDecoder().decode(await dec(p.check));
         if (check !== 'credo-demo-ok') throw new Error('bad');
-        return { js: await dec(p.js), css: await dec(p.css) };
+        return { js: await dec(p.js), css: await dec(p.css), drugs: p.drugs ? await dec(p.drugs) : null };
       }
 
       async function start(password, remember) {
         var out = await decryptAll(password);
+        if (out.drugs) { try { window.__CREDO_MASTER_DRUGS = JSON.parse(new TextDecoder().decode(out.drugs)); } catch (e) {} }
         try { if (remember) localStorage.setItem(REM_KEY, password); } catch (e) {}
         var style = document.createElement('style');
         style.textContent = new TextDecoder().decode(out.css);
         document.head.appendChild(style);
         document.getElementById('gate').remove();
-        document.documentElement.setAttribute('lang', 'ar');
+        // الصفحة ترجع زي البرنامج على الجهاز بالظبط (وضع النهار ومن غير ستايل شاشة الباسوورد)
+        var gs = document.getElementById('gate-style'); if (gs) gs.remove();
+        var html = document.documentElement;
+        html.setAttribute('lang', 'en'); html.removeAttribute('dir'); html.style.colorScheme = 'light';
+        try { localStorage.setItem('theme', 'light'); } catch (e) {}
+        html.classList.remove('dark'); document.body.classList.remove('dark');
         var url = URL.createObjectURL(new Blob([out.js], { type: 'text/javascript' }));
         var s = document.createElement('script');
         s.type = 'module';
