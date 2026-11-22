@@ -3,6 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    // التليفون بالعرض: الصفحة بعرض 1024 (شاشة لابتوب صغير) وبتتصغّر على قد عرض التليفون
+    // التليفون بالطول: عرض التليفون الطبيعي (علشان رسالة «اقلب التليفون» تبان مظبوط)
+    (function () {
+      var phone = false;
+      try { phone = window.matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) <= 600; } catch (e) {}
+      window.__credoPhone = phone;
+      if (!phone) return;
+      var meta = document.querySelector('meta[name=viewport]');
+      window.__credoIsPortrait = function () {
+        try { if (screen.orientation && screen.orientation.type) return screen.orientation.type.indexOf('portrait') === 0; } catch (e) {}
+        if (typeof window.orientation === 'number') return window.orientation === 0 || window.orientation === 180;
+        return screen.height > screen.width;
+      };
+      window.__credoApplyViewport = function () {
+        var wide = !window.__credoIsPortrait() || window.__credoRotateSkipped;
+        var want = wide ? 'width=1024, user-scalable=yes' : 'width=device-width, initial-scale=1.0';
+        if (meta.getAttribute('content') !== want) meta.setAttribute('content', want);
+      };
+      try { window.__credoRotateSkipped = sessionStorage.getItem('credo_demo_rotate_skip') === '1'; } catch (e) {}
+      window.__credoApplyViewport();
+    })();
+  </script>
   <meta name="robots" content="noindex, nofollow" />
   <meta name="color-scheme" content="light only" />
   <link rel="icon" type="image/png" href="/demo/favicon.png" />
@@ -38,6 +61,53 @@
     </form>
   </div>
   <div id="root"></div>
+
+  <!-- التليفون: رسالة «اقلب التليفون» وهو بالطول (من أول ما الصفحة تفتح) -->
+  <div id="rotate" dir="rtl" style="display:none;position:fixed;inset:0;z-index:2147483647;background:linear-gradient(160deg,#02475e,#00607a 60%,#0a7a8f);color:#fff;font-family:Cairo,Tahoma,'Segoe UI',sans-serif;text-align:center;align-items:center;justify-content:center;flex-direction:column;padding:6vw;box-sizing:border-box">
+    <svg viewBox="0 0 64 64" style="width:26vw;height:26vw;max-width:150px;max-height:150px;animation:credo-rot 2.4s ease-in-out infinite" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="20" y="6" width="24" height="44" rx="5" />
+      <line x1="29" y1="43" x2="35" y2="43" />
+      <path d="M50 52c4-3 6-8 6-13" stroke="#5eead4" />
+      <path d="M53 37l3 2 2-3" stroke="#5eead4" />
+    </svg>
+    <div style="font-size:6.4vw;font-weight:800;margin-top:5vw;line-height:1.4">اقلب التليفون بالعرض</div>
+    <div style="font-size:3.9vw;line-height:1.8;margin-top:2.5vw;opacity:.9;max-width:88vw">البرنامج معمول لشاشة عريضة زي الكمبيوتر — لفّ التليفون علشان تشوف كل حاجة واضحة وكبيرة</div>
+    <button id="rotate-skip" type="button" style="margin-top:7vw;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:3vw;padding:2.6vw 5vw;font:700 3.6vw Cairo,Tahoma,sans-serif;width:auto;cursor:pointer">التليفون مش بيلف؟ كمّل كده</button>
+  </div>
+  <style>@keyframes credo-rot{0%,15%{transform:rotate(0)}45%,70%{transform:rotate(-90deg)}100%{transform:rotate(0)}}</style>
+  <script>
+    // ===== نسخة التليفون =====
+    // التليفون بالعرض: البرنامج بيتعرض بعرض شاشة لابتوب صغير (1024) ويتصغّر على قد عرض التليفون
+    // — نفس شكل البرنامج على الكمبيوتر بالظبط، والقايمة الجانبية مقفولة علشان المساحة.
+    // التليفون بالطول: رسالة «اقلب التليفون».
+    (function () {
+      if (!window.__credoPhone) return;
+      var box = document.getElementById('rotate');
+      var update = function () {
+        window.__credoApplyViewport();
+        box.style.display = (!window.__credoRotateSkipped && window.__credoIsPortrait()) ? 'flex' : 'none';
+      };
+      document.getElementById('rotate-skip').addEventListener('click', function () {
+        window.__credoRotateSkipped = true;
+        try { sessionStorage.setItem('credo_demo_rotate_skip', '1'); } catch (e) {}
+        update();
+      });
+      try { if (screen.orientation && screen.orientation.addEventListener) screen.orientation.addEventListener('change', function () { setTimeout(update, 100); }); } catch (e) {}
+      window.addEventListener('orientationchange', function () { setTimeout(update, 150); });
+      window.addEventListener('resize', update);
+      update();
+      // القايمة الجانبية تبدأ مقفولة على التليفون (أول مرة بس — بعد كده زي ما الزائر يسيبها)
+      try {
+        if (!localStorage.getItem('credo_demo_phone_init')) {
+          localStorage.setItem('credo_sidebar_open', 'false');
+          localStorage.setItem('credo_demo_phone_init', '1');
+        }
+      } catch (e) {}
+    })();
+    window.__credoPhoneViewport = function () {
+      if (window.__credoPhone && window.__credoApplyViewport) window.__credoApplyViewport();
+    };
+  </script>
   <script>
     (function () {
       var REM_KEY = 'credo_demo_pw';
@@ -69,6 +139,7 @@
         html.setAttribute('lang', 'en'); html.removeAttribute('dir'); html.style.colorScheme = 'light';
         try { localStorage.setItem('theme', 'light'); } catch (e) {}
         html.classList.remove('dark'); document.body.classList.remove('dark');
+        if (window.__credoPhoneViewport) window.__credoPhoneViewport();
         var url = URL.createObjectURL(new Blob([out.js], { type: 'text/javascript' }));
         var s = document.createElement('script');
         s.type = 'module';
