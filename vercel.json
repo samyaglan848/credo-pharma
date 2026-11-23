@@ -19,11 +19,19 @@
   ],
   "headers": [
     {
-      "source": "/demo/(.*)",
+      "source": "/demo(.*)",
       "headers": [
         {
           "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         }
       ]
     }
