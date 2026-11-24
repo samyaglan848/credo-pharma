@@ -160,7 +160,8 @@ export default async function middleware(req) {
     return respond('Not found', 404, { 'Content-Type': 'text/plain; charset=utf-8' });
   }
   if (!secret || secret.length < 32) {
-    return respond('التجربة مقفولة مؤقتاً', 503, { 'Content-Type': 'text/plain; charset=utf-8' });
+    // تشخيص من غير ما القيمة نفسها تبان: موجود ولا لأ وطوله كام
+    return respond('التجربة مقفولة مؤقتاً', 503, { 'Content-Type': 'text/plain; charset=utf-8', 'X-Demo-Config': secret ? 'short-' + secret.length : 'missing', 'X-Demo-Mw': 'v3' });
   }
 
   // صفحة كلمة السر
