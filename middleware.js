@@ -151,7 +151,9 @@ button{margin-top:12px;width:100%;padding:12px;border:0;border-radius:14px;backg
 export default async function middleware(req) {
   const url = new URL(req.url);
   const path = url.pathname;
-  const secret = (globalThis.process && process.env && process.env.DEMO_SECRET) || '';
+  // لازم process.env.DEMO_SECRET بالاسم ده بالظبط (Vercel بيحط القيمة وقت البناء)
+  let secret = '';
+  try { secret = String(process.env.DEMO_SECRET || '').trim(); } catch (e) {}
 
   // ملفات مش المفروض تتطلب أبداً (حتى بعد الدخول)
   if (/\.(map|env)$/i.test(path) || /\/(\.|src\/|node_modules\/)/i.test(path)) {
